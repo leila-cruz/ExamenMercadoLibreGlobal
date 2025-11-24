@@ -171,7 +171,8 @@ Bash
 
 docker run -p 8080:8080 mutant-detector
 ##  Diagramas de secuencia (POST /mutant)
-# 1 Diagrama de Detección```mermaid
+# 1 Diagrama de Detección
+```mermaid
 sequenceDiagram
     actor Client
     participant Controller as MutantController
@@ -203,6 +204,7 @@ sequenceDiagram
     end
 ```
 # 2. Diagrama de Estadísticas (GET /stats)
+
 ```mermaid
 sequenceDiagram
     actor Admin
