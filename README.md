@@ -28,7 +28,7 @@ Te ha contratado para desarrollar un proyecto que detecte si un humano es mutant
 **Condición:** Un humano es mutante si encuentras **más de una secuencia de cuatro letras iguales**, de forma oblicua, horizontal o vertical.
 
 ### Ejemplo de ADN Mutante
-```json
+json
 {
   "dna": ["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
 }
