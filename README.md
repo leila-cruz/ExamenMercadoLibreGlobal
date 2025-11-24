@@ -34,7 +34,7 @@ json
 }
 (Contiene una secuencia horizontal "CCCC" y diagonales/verticales que cumplen la condición).
 
-🛠️ Tecnologías Utilizadas
+## 🛠️ Tecnologías Utilizadas
 Lenguaje: Java 21 (LTS)
 
 Framework: Spring Boot 3.3.x
@@ -53,7 +53,7 @@ Documentación: SpringDoc OpenAPI (Swagger)
 
 Nube: Render
 
-⚡ Características y Optimizaciones
+## ⚡ Características y Optimizaciones
 Algoritmo Eficiente (O(N)):
 
 Se implementó Early Termination: El algoritmo se detiene inmediatamente al encontrar la segunda secuencia, evitando recorrer toda la matriz innecesariamente.
@@ -76,7 +76,7 @@ Tests Unitarios y de Integración exhaustivos.
 
 Reporte de cobertura de código integrado.
 
-📡 Uso de la API
+## 📡 Uso de la API
 1. Detectar Mutante
 Envía una secuencia de ADN para su análisis.
 
@@ -157,7 +157,7 @@ Bash
 ./gradlew test jacocoTestReport
 El reporte HTML estará disponible en: build/reports/jacoco/test/html/index.html.
 
-🐳 Ejecución con Docker
+## 🐳 Ejecución con Docker
 Si prefieres usar Docker para no instalar Java localmente:
 
 Construir la imagen:
