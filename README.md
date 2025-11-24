@@ -175,32 +175,47 @@ docker run -p 8080:8080 mutant-detector
 ```mermaid
 sequenceDiagram
     actor Client
-    participant Controller as MutantController
-    participant Service as MutantService
-    participant DB as DnaRecordRepository
-    participant Detector as MutantDetector
+    participant C as MutantController
+    participant S as MutantService
+    participant R as DnaRecordRepository
+    participant D as MutantDetector
 
-    Client->>Controller: POST /mutant (DNA)
-    Controller->>Service: analyzeDna(dna)
+    Client->>C: POST /mutant {dna}
+    Note over C: @Validated (DTO)
     
-    Service->>Service: Calcular Hash del ADN
-    Service->>DB: findByDnaHash(hash)
+    C->>S: analyzeDna(dna)
+    S->>S: calculateDnaHash(dna)
     
-    alt ADN ya analizado (Caché)
-        DB-->>Service: Retorna DnaRecord existente
-    else ADN nuevo
-        DB-->>Service: null (No encontrado)
-        Service->>Detector: isMutant(dna)
-        Detector-->>Service: boolean result
-        Service->>DB: save(new DnaRecord)
+    S->>R: findByDnaHash(hash)
+    
+    alt Hash Existe (Cache Hit)
+        R-->>S: DnaRecord (Resultado previo)
+        Note right of S: Retorna sin procesar
+    else Hash Nuevo (Cache Miss)
+        R-->>S: empty
+        S->>D: isMutant(dna)
+        
+        rect rgb(240, 248, 255)
+            note right of D: Algoritmo Optimizado
+            D->>D: isValidDna() & toMatrix()
+            loop Recorrer Matriz
+                D->>D: checkHorizontal / Vertical / Diagonal
+                opt Early Termination
+                    D-->>S: true (Rompe loop)
+                end
+            end
+        end
+        
+        D-->>S: resultado (boolean)
+        S->>R: save(new DnaRecord)
     end
     
-    Service-->>Controller: boolean isMutant
+    S-->>C: boolean isMutant
     
     alt es Mutante
-        Controller-->>Client: 200 OK
+        C-->>Client: 200 OK
     else es Humano
-        Controller-->>Client: 403 Forbidden
+        C-->>Client: 403 Forbidden
     end
 ```
 # 2. Diagrama de Estadísticas (GET /stats)
@@ -208,22 +223,24 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor Admin
-    participant Controller as MutantController
-    participant Service as StatsService
-    participant DB as DnaRecordRepository
+    participant C as MutantController
+    participant S as StatsService
+    participant R as DnaRecordRepository
 
-    Admin->>Controller: GET /stats
-    Controller->>Service: getStats()
+    Admin->>C: GET /stats
+    C->>S: getStats()
     
-    par Consultas Paralelas (o secuenciales)
-        Service->>DB: countByIsMutant(true)
-        DB-->>Service: countMutant (long)
-        Service->>DB: countByIsMutant(false)
-        DB-->>Service: countHuman (long)
+    rect rgb(255, 250, 240)
+        note right of S: Consultas a H2
+        S->>R: countByIsMutant(true)
+        R-->>S: count_mutant (long)
+        
+        S->>R: countByIsMutant(false)
+        R-->>S: count_human (long)
     end
     
-    Service->>Service: calcular Ratio
-    Service-->>Controller: StatsResponse JSON
-    Controller-->>Admin: 200 OK {count_mutant, count_human, ratio}
+    S->>S: calcular Ratio
+    S-->>C: StatsResponse DTO
+    C-->>Admin: 200 OK JSON
 ```
 Hecho por Leila Cruz para el examen de MercadoLibre.
