@@ -76,10 +76,6 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected internal error occurred", request.getRequestURI());
     }
 
-    /**
-     * Método auxiliar para construir la respuesta y no repetir código.
-     * Usa el Builder que agregamos al DTO.
-     */
     private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message, String path) {
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
