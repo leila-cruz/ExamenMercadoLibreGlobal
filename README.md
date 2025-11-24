@@ -170,4 +170,57 @@ Correr el contenedor:
 Bash
 
 docker run -p 8080:8080 mutant-detector
+##  Diagramas de secuencia (POST /mutant)
+# 1 Diagrama de Detección
+sequenceDiagram
+    actor Client
+    participant Controller as MutantController
+    participant Service as MutantService
+    participant DB as DnaRecordRepository
+    participant Detector as MutantDetector
+
+    Client->>Controller: POST /mutant (DNA)
+    Controller->>Service: analyzeDna(dna)
+    
+    Service->>Service: Calcular Hash del ADN
+    Service->>DB: findByDnaHash(hash)
+    
+    alt ADN ya analizado (Caché)
+        DB-->>Service: Retorna DnaRecord existente
+    else ADN nuevo
+        DB-->>Service: null (No encontrado)
+        Service->>Detector: isMutant(dna)
+        Detector-->>Service: boolean result
+        Service->>DB: save(new DnaRecord)
+    end
+    
+    Service-->>Controller: boolean isMutant
+    
+    alt es Mutante
+        Controller-->>Client: 200 OK
+    else es Humano
+        Controller-->>Client: 403 Forbidden
+    end
+
+
+# 2. Diagrama de Estadísticas (GET /stats)
+sequenceDiagram
+    actor Admin
+    participant Controller as MutantController
+    participant Service as StatsService
+    participant DB as DnaRecordRepository
+
+    Admin->>Controller: GET /stats
+    Controller->>Service: getStats()
+    
+    par Consultas Paralelas (o secuenciales)
+        Service->>DB: countByIsMutant(true)
+        DB-->>Service: countMutant (long)
+        Service->>DB: countByIsMutant(false)
+        DB-->>Service: countHuman (long)
+    end
+    
+    Service->>Service: calcular Ratio
+    Service-->>Controller: StatsResponse JSON
+    Controller-->>Admin: 200 OK {count_mutant, count_human, ratio}
 Hecho por Leila Cruz para el examen de MercadoLibre.
