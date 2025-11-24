@@ -171,7 +171,7 @@ Bash
 
 docker run -p 8080:8080 mutant-detector
 ##  Diagramas de secuencia (POST /mutant)
-# 1 Diagrama de Detección
+# 1 Diagrama de Detección```mermaid
 sequenceDiagram
     actor Client
     participant Controller as MutantController
@@ -201,9 +201,9 @@ sequenceDiagram
     else es Humano
         Controller-->>Client: 403 Forbidden
     end
-
-
+```
 # 2. Diagrama de Estadísticas (GET /stats)
+```mermaid
 sequenceDiagram
     actor Admin
     participant Controller as MutantController
@@ -223,4 +223,5 @@ sequenceDiagram
     Service->>Service: calcular Ratio
     Service-->>Controller: StatsResponse JSON
     Controller-->>Admin: 200 OK {count_mutant, count_human, ratio}
+```
 Hecho por Leila Cruz para el examen de MercadoLibre.
