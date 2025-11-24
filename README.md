@@ -194,8 +194,6 @@ sequenceDiagram
     else Hash Nuevo (Cache Miss)
         R-->>S: empty
         S->>D: isMutant(dna)
-        
-        rect rgb(240, 248, 255)
             note right of D: Algoritmo Optimizado
             D->>D: isValidDna() & toMatrix()
             loop Recorrer Matriz
