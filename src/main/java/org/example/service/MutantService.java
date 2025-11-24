@@ -67,7 +67,6 @@ public class MutantService {
 
             // Calcular hash
             byte[] hashBytes = digest.digest(dnaString.getBytes(StandardCharsets.UTF_8));
-
             // Convertir a hexadecimal
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {

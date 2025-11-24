@@ -1,21 +1,21 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "dna_records", indexes = {
-        @Index(name = "idx_dna_hash", columnList = "dnaHash"),
-        @Index(name = "idx_is_mutant", columnList = "isMutant")
+        @Index(name = "idx_dna_hash", columnList = "dna_hash"),
+        @Index(name = "idx_is_mutant", columnList = "is_mutant")
 })
-@Getter
-@Setter
+@Data // Incluye Getter, Setter, ToString, EqualsAndHashCode
 @NoArgsConstructor
-public class DnaRecord {
+@AllArgsConstructor // <--- Agregado para flexibilidad en tests
+public class DnaRecord implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,7 @@ public class DnaRecord {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    // Constructor personalizado para lógica de negocio (usado en MutantService)
     public DnaRecord(String dnaHash, boolean isMutant) {
         this.dnaHash = dnaHash;
         this.isMutant = isMutant;
