@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
         @Index(name = "idx_dna_hash", columnList = "dna_hash"),
         @Index(name = "idx_is_mutant", columnList = "is_mutant")
 })
-@Data // Incluye Getter, Setter, ToString, EqualsAndHashCode
+@Data
 @NoArgsConstructor
-@AllArgsConstructor // <--- Agregado para flexibilidad en tests
+@AllArgsConstructor
 public class DnaRecord implements Serializable {
 
     @Id
