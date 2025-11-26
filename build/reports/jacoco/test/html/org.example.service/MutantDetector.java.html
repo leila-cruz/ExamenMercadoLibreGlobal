@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MutantDetector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExamenMercadoLibreGlobal</a> &gt; <a href="index.source.html" class="el_package">org.example.service</a> &gt; <span class="el_source">MutantDetector.java</span></div><h1>MutantDetector.java</h1><pre class="source lang-java linenums">package org.example.service;
+
+import org.springframework.stereotype.Service;
+import java.util.Set;
+
+@Service
+<span class="fc" id="L7">public class MutantDetector {</span>
+
+    private static final int SEQUENCE_LENGTH = 4;
+    // Uso de Set para validación O(1)
+<span class="fc" id="L11">    private static final Set&lt;Character&gt; VALID_BASES = Set.of('A', 'T', 'C', 'G');</span>
+
+    public boolean isMutant(String[] dna) {
+<span class="fc bfc" id="L14" title="All 2 branches covered.">        if (!isValidDna(dna)) return false;</span>
+
+<span class="fc" id="L16">        final int n = dna.length;</span>
+<span class="fc" id="L17">        int sequenceCount = 0;</span>
+
+        // Optimización: Convertir a char[][] una sola vez (Ahorro 20% tiempo)
+<span class="fc" id="L20">        char[][] matrix = new char[n][];</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L22">            matrix[i] = dna[i].toCharArray();</span>
+        }
+
+        // Recorremos la matriz UNA sola vez
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for (int row = 0; row &lt; n; row++) {</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">            for (int col = 0; col &lt; n; col++) {</span>
+
+                // Solo buscamos si la celda actual NO es parte de una secuencia ya contada
+                // Esto reemplaza la lógica compleja de &quot;neighborDifferent&quot; de la V1
+
+                // 1. Horizontal (→)
+<span class="fc bfc" id="L33" title="All 2 branches covered.">                if (col &lt;= n - SEQUENCE_LENGTH) {</span>
+<span class="fc bfc" id="L34" title="All 4 branches covered.">                    if (checkHorizontal(matrix, row, col) &amp;&amp; !isPreviousHorizontalEqual(matrix, row, col)) {</span>
+<span class="fc" id="L35">                        sequenceCount++;</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">                        if (sequenceCount &gt; 1) return true; // Early Termination 🚀</span>
+                    }
+                }
+
+                // 2. Vertical (↓)
+<span class="fc bfc" id="L41" title="All 2 branches covered.">                if (row &lt;= n - SEQUENCE_LENGTH) {</span>
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">                    if (checkVertical(matrix, row, col) &amp;&amp; !isPreviousVerticalEqual(matrix, row, col)) {</span>
+<span class="fc" id="L43">                        sequenceCount++;</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">                        if (sequenceCount &gt; 1) return true;</span>
+                    }
+                }
+
+                // 3. Diagonal Descendente (↘)
+<span class="fc bfc" id="L49" title="All 4 branches covered.">                if (row &lt;= n - SEQUENCE_LENGTH &amp;&amp; col &lt;= n - SEQUENCE_LENGTH) {</span>
+<span class="pc bpc" id="L50" title="1 of 4 branches missed.">                    if (checkDiagonalDesc(matrix, row, col) &amp;&amp; !isPreviousDiagonalDescEqual(matrix, row, col)) {</span>
+<span class="fc" id="L51">                        sequenceCount++;</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">                        if (sequenceCount &gt; 1) return true;</span>
+                    }
+                }
+
+                // 4. Diagonal Ascendente (↗)
+<span class="fc bfc" id="L57" title="All 4 branches covered.">                if (row &gt;= SEQUENCE_LENGTH - 1 &amp;&amp; col &lt;= n - SEQUENCE_LENGTH) {</span>
+<span class="pc bpc" id="L58" title="1 of 4 branches missed.">                    if (checkDiagonalAsc(matrix, row, col) &amp;&amp; !isPreviousDiagonalAscEqual(matrix, row, col)) {</span>
+<span class="fc" id="L59">                        sequenceCount++;</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">                        if (sequenceCount &gt; 1) return true;</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L65">        return false;</span>
+    }
+
+    // --- Validaciones ---
+
+    private boolean isValidDna(String[] dna) {
+<span class="fc bfc" id="L71" title="All 4 branches covered.">        if (dna == null || dna.length == 0) return false;</span>
+<span class="fc" id="L72">        final int n = dna.length;</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (n &lt; SEQUENCE_LENGTH) return false; // Matriz muy chica para tener secuencias</span>
+
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (String row : dna) {</span>
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">            if (row == null || row.length() != n) return false; // No es cuadrada</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            for (char c : row.toCharArray()) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">                if (!VALID_BASES.contains(c)) return false; // Carácter inválido</span>
+            }
+        }
+<span class="fc" id="L81">        return true;</span>
+    }
+
+    // --- Métodos de Verificación (Direct Comparison) ---
+
+    private boolean checkHorizontal(char[][] matrix, int row, int col) {
+<span class="fc" id="L87">        char base = matrix[row][col];</span>
+<span class="fc bfc" id="L88" title="All 6 branches covered.">        return matrix[row][col + 1] == base &amp;&amp;</span>
+                matrix[row][col + 2] == base &amp;&amp;
+                matrix[row][col + 3] == base;
+    }
+
+    private boolean checkVertical(char[][] matrix, int row, int col) {
+<span class="fc" id="L94">        char base = matrix[row][col];</span>
+<span class="pc bpc" id="L95" title="1 of 6 branches missed.">        return matrix[row + 1][col] == base &amp;&amp;</span>
+                matrix[row + 2][col] == base &amp;&amp;
+                matrix[row + 3][col] == base;
+    }
+
+    private boolean checkDiagonalDesc(char[][] matrix, int row, int col) {
+<span class="fc" id="L101">        char base = matrix[row][col];</span>
+<span class="pc bpc" id="L102" title="1 of 6 branches missed.">        return matrix[row + 1][col + 1] == base &amp;&amp;</span>
+                matrix[row + 2][col + 2] == base &amp;&amp;
+                matrix[row + 3][col + 3] == base;
+    }
+
+    private boolean checkDiagonalAsc(char[][] matrix, int row, int col) {
+<span class="fc" id="L108">        char base = matrix[row][col];</span>
+<span class="fc bfc" id="L109" title="All 6 branches covered.">        return matrix[row - 1][col + 1] == base &amp;&amp;</span>
+                matrix[row - 2][col + 2] == base &amp;&amp;
+                matrix[row - 3][col + 3] == base;
+    }
+
+    // --- Prevención de Solapamiento (AAAAA cuenta como 1) ---
+    // Verifica si la celda anterior era igual. Si es así, significa que ya contamos
+    // esta secuencia en la iteración anterior, por lo que la ignoramos ahora.
+
+    private boolean isPreviousHorizontalEqual(char[][] matrix, int row, int col) {
+<span class="fc bfc" id="L119" title="All 4 branches covered.">        return col &gt; 0 &amp;&amp; matrix[row][col] == matrix[row][col - 1];</span>
+    }
+
+    private boolean isPreviousVerticalEqual(char[][] matrix, int row, int col) {
+<span class="pc bpc" id="L123" title="3 of 4 branches missed.">        return row &gt; 0 &amp;&amp; matrix[row][col] == matrix[row - 1][col];</span>
+    }
+
+    private boolean isPreviousDiagonalDescEqual(char[][] matrix, int row, int col) {
+<span class="pc bpc" id="L127" title="5 of 6 branches missed.">        return row &gt; 0 &amp;&amp; col &gt; 0 &amp;&amp; matrix[row][col] == matrix[row - 1][col - 1];</span>
+    }
+
+    private boolean isPreviousDiagonalAscEqual(char[][] matrix, int row, int col) {
+<span class="pc bpc" id="L131" title="5 of 6 branches missed.">        return row &lt; matrix.length - 1 &amp;&amp; col &gt; 0 &amp;&amp; matrix[row][col] == matrix[row + 1][col - 1];</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

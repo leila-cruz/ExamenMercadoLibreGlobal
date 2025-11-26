@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.example.dto.FullDtoEntityTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-11-24T19:33:40" hostname="DESKTOP-LCBSLL9" time="0.01">
+  <properties/>
+  <testcase name="testDnaRequestCoverage()" classname="org.example.dto.FullDtoEntityTest" time="0.001"/>
+  <testcase name="testStatsResponseCoverage()" classname="org.example.dto.FullDtoEntityTest" time="0.003"/>
+  <testcase name="testErrorResponseCoverage()" classname="org.example.dto.FullDtoEntityTest" time="0.004"/>
+  <testcase name="testDnaRecordEntityCoverage()" classname="org.example.dto.FullDtoEntityTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

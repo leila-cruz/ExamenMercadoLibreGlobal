@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.example.service.MutantDetectorTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2025-11-24T19:33:41" hostname="DESKTOP-LCBSLL9" time="0.024">
+  <properties/>
+  <testcase name="ERROR: Retorna false si la matriz es muy pequeña (&lt;4x4)" classname="org.example.service.MutantDetectorTest" time="0.001"/>
+  <testcase name="MUTANTE: Detecta secuencias diagonales" classname="org.example.service.MutantDetectorTest" time="0.002"/>
+  <testcase name="LÓGICA: No debe contar solapamientos" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <testcase name="MUTANTE: Caso mixto (1 Horizontal + 1 Vertical)" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <testcase name="HUMANO: Con SOLO UNA secuencia (Necesita &gt; 1)" classname="org.example.service.MutantDetectorTest" time="0.001"/>
+  <testcase name="MUTANTE: Detecta múltiples secuencias horizontales" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <testcase name="ERROR: Retorna false con caracteres inválidos" classname="org.example.service.MutantDetectorTest" time="0.001"/>
+  <testcase name="HUMANO: Sin secuencias" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <testcase name="ERROR: Retorna false si la matriz no es cuadrada (NxM)" classname="org.example.service.MutantDetectorTest" time="0.001"/>
+  <testcase name="LÓGICA: Cruce de secuencias (Comparten letra)" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <testcase name="ERROR: Retorna false si el ADN es null" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <testcase name="ERROR: Retorna false si el array está vacío" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <testcase name="PERFORMANCE: Matriz Gigante 1000x1000 con Early Termination" classname="org.example.service.MutantDetectorTest" time="0.014"/>
+  <testcase name="MUTANTE: Detecta múltiples secuencias verticales" classname="org.example.service.MutantDetectorTest" time="0.0"/>
+  <system-out><![CDATA[Tiempo de ejecución 1000x1000: 14ms
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
